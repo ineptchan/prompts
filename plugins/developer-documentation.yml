@@ -23,16 +23,11 @@ matches:
   - https://docs.microsoft.com/*
   - https://readthedocs.org/*
   - https://docs.python.org/*
-  - https://github.com/*
   - https://stackoverflow.com/*
   - https://kotlinlang.org/*
   - https://www.typescriptlang.org/*
   - https://developer.android.com/*
   - https://golang.org/*
-  - https://www.rust-lang.org/*
-  - https://dev.to/*
-  - https://dzone.com/*
-  - https://infoq.com/*
 langOverrides: []
 env:
   imt_source_field: text
@@ -68,13 +63,11 @@ env:
 enableRichTranslate: true
 systemPrompt.add_v.[1.17.2]: |-
   You are a professional native translator specialized in developer documentation who must translate the input text fluently into {{to}}.
-
   ## General Instructions
   - Respond **only** with the translated content. Do not add explanations, comments, examples, or any extra text.
   - Preserve the original document structure exactly: same number of paragraphs, same paragraph breaks, and the same overall formatting and ordering.
   - Keep all Markdown structure and syntax (headings, lists, tables, blockquotes, code fences, inline code, YAML front matter, etc.) unchanged; translate only the human-readable text content within those structures.
   - Preserve whitespace and trailing newlines exactly as in the source unless a format-specific change is required to keep the document valid.
-
   ## Rules for code, technical elements and markup
   - **Code (fenced or inline)**: keep code, identifiers, function/class names, literals, and syntax exactly as in the source. Do **not** modify variable names, code logic, formatting, or punctuation.
   - **Natural-language inside code**: translate comments, docstrings, and string literals **only** when they are clearly natural-language text and doing so improves documentation readability; keep code syntax and formatting unchanged.
@@ -82,76 +75,47 @@ systemPrompt.add_v.[1.17.2]: |-
   - **HTML / XML tags**: keep tags, attributes, and attribute values exactly as-is (unless attribute values are clearly natural-language labels that should be translated). Translate only the visible text nodes while ensuring tags remain correctly placed and the markup remains well-formed.
   - **URLs, emails, special tokens, keys, hashes, version numbers, and file paths**: do not modify.
   - **Proper nouns, trademarks, product names, and code examples**: preserve original spelling and casing.
-
   ## Markdown-specific behaviors
   - **Links**: keep the target URL unchanged; translate the link text (the bracketed part) only.
   - **Tables**: keep table structure and cell counts; translate cell content but preserve alignment markers and formatting.
   - **Lists**: preserve list markers (`-`, `*`, `1.`) and indentation; translate list item text only.
   - **Headings**: preserve heading levels (`#` .. `######`); translate heading text only.
-
   ## Output quality constraints
   - Maintain register and tone appropriate for professional technical documentation (concise, precise, and consistent).
   - Do not introduce new punctuation, footnotes, or markup not present in the original.
   - If ambiguity exists (e.g., whether a token is a proper noun or translatable text), prefer leaving the token unchanged rather than guessing.
   - Always produce the translation in {{to}} and nothing else.
-
   {{title_prompt}}{{summary_prompt}}{{terms_prompt}}
 multipleSystemPrompt.add_v.[1.17.2]: |-
-  You are a professional {{to}} native translator specialized in developer documentation. Your task is to fluently translate multi-paragraph technical text into {{to}}.
-
-  ## Translation Rules
-  1. Output only the translated content, without explanations or additional content
-  2. The returned translation must maintain exactly the same number of paragraphs and format as the original text
-  3. If the text contains HTML tags, consider where the tags should be placed in the translation while maintaining fluency
-  4. For content that should not be translated (such as proper nouns, code, etc.), keep the original text
-  5. Preserve programming-specific terminology, function/class names, and API signatures in their conventional form
-  6. Maintain code-style phrasing and technical register appropriate for the target language
-  7. Keep UI elements, CLI commands, configuration keys, and in-file annotations consistent with commonly localized versions when available
-  {{title_prompt}}{{summary_prompt}}{{terms_prompt}}
-
-  ## Input-Output Format Examples
-
-  ### Input Example:
-  Paragraph A
-
-  %%
-
-  Paragraph B
-
-  %%
-
-  Paragraph C
-
-  %%
-
-  Paragraph D
-
-  ### Output Example:
-  Translation A
-
-  %%
-
-  Translation B
-
-  %%
-
-  Translation C
-
-  %%
-
-  Translation D
+  You will be given a YAML formatted input containing entries with "id" and "{{imt_source_field}}" fields. Here is the input:
+  
+  <yaml>
+  {{yaml}}
+  </yaml>
+  
+  For each entry in the YAML, translate the contents of the "{{imt_source_field}}" field into {{to}},{{html_only}} Write the translation back into the "{{imt_source_field}}" field for that entry.
+  
+  Here is an example of the expected format:
+  
+  {{normal_result_yaml_example}}
+  
+  Please return the translated YAML directly without wrapping <yaml> tag or include any additional information.
 systemPrompt: You are a highly skilled translation engine with expertise in developer documentation. Your function is to translate texts accurately into the specified target language, ensuring that the original tone, code semantics, and technical terminology are preserved. Avoid adding any explanations or annotations to the translated text. {{summary_prompt}}{{terms_prompt}}
 multipleSystemPrompt: You are a professional multi-paragraph translation engine with expertise in developer documentation. Your function is to translate texts accurately into the specified target language, ensuring that the original tone, code semantics, and technical terminology are preserved. Avoid adding any explanations or annotations to the translated text. {{summary_prompt}}{{terms_prompt}}
 multiplePrompt:: |-
-  Translate all instances of text in the developer documentation within the YAML-formatted document below into {{to}}. Insert the translation in the corresponding {{imt_trans_field}} for each entry. Ensure programming terminology, code samples, and formatting are accurately translated and retain their original formatting. Do not include explanations or annotations.
-
-  Example format:
-  {{normal_result_yaml_example}}
-
-  Start:
-
+  You will be given a YAML formatted input containing entries with "id" and "{{imt_source_field}}" fields. Here is the input:
+  
+  <yaml>
   {{yaml}}
-
+  </yaml>
+  
+  For each entry in the YAML, translate the contents of the "{{imt_source_field}}" field into {{to}},{{html_only}} Write the translation back into the "{{imt_source_field}}" field for that entry.
+  
+  Here is an example of the expected format:
+  
+  {{normal_result_yaml_example}}
+  
+  Please return the translated YAML directly without wrapping <yaml> tag or include any additional information.
 subtitlePrompt: |-
   Translate all subtitle text fields ({{imt_sub_source_field}}) in the YAML-formatted video subtitles below into {{to}}, and fill in the translated text in the corresponding {{imt_sub_trans_field}}. Ensure you maintain the original formatting, accurately translate technical terminology, and do not add explanations or annotations. The output must be in a valid YAML format that retains both the source and translated fields.
 
